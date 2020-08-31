@@ -131,7 +131,7 @@ DecoderState::next(const double *probs,
 
         if (prefix_new != nullptr) {
           // compute timesteps of current path
-          std::vector<unsigned int> timesteps_new=prefix->timesteps;
+          std::vector<unsigned int> timesteps_new = prefix->timesteps;
           timesteps_new.push_back(abs_time_step_);
 
           // compute probability of current path
