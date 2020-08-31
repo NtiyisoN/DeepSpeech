@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <limits>
 #include <memory>
-#include <utility>
+#include <unordered_map>
 #include <vector>
 
 #include "fst/fstlib.h"
@@ -74,7 +74,7 @@ private:
   bool exists_;
   bool has_dictionary_;
 
-  std::vector<std::pair<unsigned int, PathTrie*>> children_;
+  std::unordered_map<unsigned int, PathTrie*> children_;
 
   // pointer to dictionary of FST
   std::shared_ptr<FstType> dictionary_;

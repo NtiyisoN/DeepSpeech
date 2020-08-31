@@ -35,12 +35,7 @@ PathTrie::~PathTrie() {
 }
 
 PathTrie* PathTrie::get_path_trie(unsigned int new_char, float cur_log_prob_c, bool reset) {
-  auto child = children_.begin();
-  for (; child != children_.end(); ++child) {
-    if (child->first == new_char) {
-      break;
-    }
-  }
+  auto child = children_.find(new_char);
   if (child != children_.end()) {
     if (!child->second->exists_) {
       child->second->exists_ = true;
@@ -85,7 +80,7 @@ PathTrie* PathTrie::get_path_trie(unsigned int new_char, float cur_log_prob_c, b
           new_path->dictionary_state_ = matcher_->Value().nextstate;
         }
 
-        children_.push_back(std::make_pair(new_char, new_path));
+        children_[new_char] = new_path;
         return new_path;
       }
     } else {
@@ -93,7 +88,7 @@ PathTrie* PathTrie::get_path_trie(unsigned int new_char, float cur_log_prob_c, b
       new_path->character = new_char;
       new_path->parent = this;
       new_path->log_prob_c = cur_log_prob_c;
-      children_.push_back(std::make_pair(new_char, new_path));
+      children_[new_char] = new_path;
       return new_path;
     }
   }
@@ -178,11 +173,9 @@ void PathTrie::remove() {
   exists_ = false;
 
   if (children_.size() == 0) {
-    for (auto child = parent->children_.begin(); child != parent->children_.end(); ++child) {
-      if (child->first == character) {
-        parent->children_.erase(child);
-        break;
-      }
+    auto child = parent->children_.find(character);
+    if (child != parent->children_.end()) {
+      parent->children_.erase(child);
     }
 
     if (parent->children_.size() == 0 && !parent->exists_) {
